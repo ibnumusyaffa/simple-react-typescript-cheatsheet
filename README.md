@@ -149,13 +149,11 @@ const [data, setData] = useState<Data>(undefined);
 const [data, setData] = useState<Data | null>(null);
 ```
 
-## useEffect
-
 ## useCallback
 
 ```tsx
 function App(props: { id: number }) {
-
+                                //⬇️ add type here
   const handleClick = useCallback((message: string) => {
     console.log("name")
   }, [props.id]);
@@ -169,8 +167,6 @@ function App(props: { id: number }) {
   );
 }
 ```
-
-## useMemo
 
 ## useRef
 
