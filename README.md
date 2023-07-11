@@ -246,26 +246,26 @@ function App() {
 
 ```tsx
 export const Component = () => {
-  const ref = useRef<string>(null);
-
+  const ref1 = useRef<string>(null);
   // if you pass null to initial value
   // this not allowed to change directly 
-  // how do you solved this ?
-  ref.current = "Hello";
+  ref1.current = "Hello";
+
+  const ref2 = useRef<string>();
+  // if initial value is undefined this is allowed to change (mutable)
+  ref2.current = "Hello";
 
   return null;
 };
 ```
 
-solution
 
-```tsx
-export const Component = () => {
-  const ref = useRef<string>();
+## Types or Interfaces?
 
-  // if initial value is undefined this is allowed (mutable)
-  ref.current = "Hello";
+`interface`s are different from `type`s in TypeScript, but they can be used for very similar things as far as common React uses cases are concerned. Here's a helpful rule of thumb:
 
-  return null;
-};
-```
+- Always use `interface` for public API's definition when authoring a library or 3rd party ambient type definitions.
+
+- Consider using `type` for your React Component Props and State, because it is more constrained.
+
+Types are useful for union types (e.g. `type MyType = TypeA | TypeB`) whereas Interfaces are better for declaring dictionary shapes and then `implementing` or `extending` them.
