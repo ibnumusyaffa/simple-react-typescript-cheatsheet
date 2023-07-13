@@ -156,8 +156,9 @@ const [data, setData] = useState<Data | null>(null);
 
 ```tsx
 function App(props: { id: number }) {
-  //⬇️ add type here
+ 
   const handleClick = useCallback(
+    //⬇️ add type here
     (message: string) => {
       console.log("name");
     },
