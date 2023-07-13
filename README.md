@@ -365,7 +365,7 @@ function App() {
        {/* asChild must be true */}
       <Button variantColor="primary" asChild>
         {/* render button component as link */}
-        <a>About</a>
+        <a href="https://google.com">About</a>
       </Button>
     </div>
   )
