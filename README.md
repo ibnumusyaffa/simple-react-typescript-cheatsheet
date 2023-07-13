@@ -330,3 +330,10 @@ const App = () => {
 - Consider using `type` for your React Component Props and State, because it is more constrained.
 
 Types are useful for union types (e.g. `type MyType = TypeA | TypeB`) whereas Interfaces are better for declaring dictionary shapes and then `implementing` or `extending` them.
+
+## Resources
+
+- [React Total Typescript](https://www.totaltypescript.com/tutorials/react-with-typescript)
+- [Discriminated Unions are a Frontend Dev's Best Friend](https://www.totaltypescript.com/discriminated-unions-are-a-devs-best-friend)
+- [Other React TypeScript Cheatsheets
+](https://react-typescript-cheatsheet.netlify.app/)
