@@ -114,13 +114,16 @@ type NavBarProps = ComponentProps<typeof NavBar>;
 
 ## Typing Event Handlers from native element
 
-hover button element in VS Code, and copy paste the onClick event handler
+hover native html props, you can copy paste the type definition
 
 ```tsx
 type ButtonProps = {
+  other?: Boolean
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 ```
+
+![event handler](event-handler.png "event handler")
 
 ## useState
 
