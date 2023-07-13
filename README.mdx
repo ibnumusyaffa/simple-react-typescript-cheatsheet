@@ -13,8 +13,8 @@ function Button(props: { children: React.ReactNode }) {
 ```tsx
 // you can use interface too
 type ButtonProps = {
-  className: string
-  children: React.ReactNode
+  className: string;
+  children: React.ReactNode;
 };
 
 function Button(props: ButtonProps) {
@@ -31,9 +31,9 @@ function OtherButton({ className, ...props }: ButtonProps) {
 
 ```tsx
 type ButtonProps = {
-  disabled?: boolean
-  className: string
-  children: React.ReactNode
+  disabled?: boolean;
+  className: string;
+  children: React.ReactNode;
 };
 
 function Button({ disabled = true, ...props }: ButtonProps) {
@@ -50,7 +50,7 @@ function Button({ disabled = true, ...props }: ButtonProps) {
 ```tsx
 type ButtonProps = {
   // accept everything React can render
-  children: React.ReactNode
+  children: React.ReactNode;
 };
 
 function Button(props: ButtonProps) {
@@ -78,7 +78,7 @@ function Button(props: ComponentProps<"button">) {
 import React, { ComponentProps } from "react";
 
 type ButtonProps = ComponentProps<"button"> & {
-  variant: "primary" | "secondary"
+  variant: "primary" | "secondary";
 };
 
 function Button(props: ButtonProps) {
@@ -93,7 +93,7 @@ import React, { ComponentProps } from "react";
 
 //remove onChange property from input with Omit<Type, Keys> and combine with new type
 type InputProps = Omit<ComponentProps<"input">, "onChange"> & {
-  onChange: (value: string) => void
+  onChange: (value: string) => void;
 };
 
 function Input(props: InputProps) {
@@ -118,7 +118,7 @@ hover native html props, you can copy paste the type definition
 
 ```tsx
 type ButtonProps = {
-  other?: Boolean
+  other?: Boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 ```
@@ -156,7 +156,6 @@ const [data, setData] = useState<Data | null>(null);
 
 ```tsx
 function App(props: { id: number }) {
- 
   const handleClick = useCallback(
     //⬇️ add type here
     (message: string) => {
@@ -218,7 +217,7 @@ export const Component = () => {
 
 ```tsx
 type InputProps = {
-  className: string
+  className: string;
 };
 
 const Search = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
@@ -321,6 +320,58 @@ const App = () => {
 };
 ```
 
+## Polymorphic
+
+Imagine a `Button` component that renders a `<button>` element, but with your fancy button styles. If want to render the Button component as an a element we might have an API like:
+
+```tsx
+<Button variantColor="primary" href="https://blog.makerx.com.au/" as="a">
+  Click me
+</Button>
+```
+
+This looks nice, but its not work well with typescript. here the alternative using `radix-ui/react-slot`
+
+```tsx
+
+// Button.tsx
+import { Slot } from '@radix-ui/react-slot'
+
+type ButtonProps = React.ComponentPropsWithoutRef<'button'> & {
+  variantColor: 'primary' | 'secondary' | 'danger'
+  asChild?: boolean
+}
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, forwardedRef) => {
+  const { variantColor, asChild, ...buttonProps } = props
+  const Component = (asChild ? Slot : 'button') as 'button'
+
+  return (
+    <Component
+      {...buttonProps}
+      ref={forwardedRef}
+      className={clsx(
+          // ...
+      )}
+    />
+  )
+}
+
+// App.tsx
+
+function App() {
+  return (
+    <div>
+       {/* asChild must be true */}
+      <Button variantColor="primary" asChild>
+        {/* render button component as link */}
+        <a>About</a>
+      </Button>
+    </div>
+  )
+}
+```
+
 ## Types or Interfaces?
 
 `interface`s are different from `type`s in TypeScript, but they can be used for very similar things as far as common React uses cases are concerned. Here's a helpful rule of thumb:
@@ -336,4 +387,4 @@ Types are useful for union types (e.g. `type MyType = TypeA | TypeB`) whereas In
 - [React Total Typescript](https://www.totaltypescript.com/tutorials/react-with-typescript)
 - [Discriminated Unions are a Frontend Dev's Best Friend](https://www.totaltypescript.com/discriminated-unions-are-a-devs-best-friend)
 - [Other React TypeScript Cheatsheets
-](https://react-typescript-cheatsheet.netlify.app/)
+  ](https://react-typescript-cheatsheet.netlify.app/)
