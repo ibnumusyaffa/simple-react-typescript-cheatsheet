@@ -1,5 +1,4 @@
-# Simple React Typescript Cheatsheet
-
+# Super Simple React Typescript Cheatsheet
 
 ## Typing props with inline type
 
@@ -9,12 +8,13 @@ function Button(props: { children: React.ReactNode }) {
 }
 ```
 
-## Typing props with type (or inteface)
+## Typing props with Type
 
 ```tsx
+// you can use interface too
 type ButtonProps = {
-  className: string;
-  children: React.ReactNode;
+  className: string
+  children: React.ReactNode
 };
 
 function Button(props: ButtonProps) {
@@ -31,9 +31,9 @@ function OtherButton({ className, ...props }: ButtonProps) {
 
 ```tsx
 type ButtonProps = {
-  disabled?: boolean;
-  className: string;
-  children: React.ReactNode;
+  disabled?: boolean
+  className: string
+  children: React.ReactNode
 };
 
 function Button({ disabled = true, ...props }: ButtonProps) {
@@ -50,7 +50,7 @@ function Button({ disabled = true, ...props }: ButtonProps) {
 ```tsx
 type ButtonProps = {
   // accept everything React can render
-  children: React.ReactNode; 
+  children: React.ReactNode
 };
 
 function Button(props: ButtonProps) {
@@ -78,7 +78,7 @@ function Button(props: ComponentProps<"button">) {
 import React, { ComponentProps } from "react";
 
 type ButtonProps = ComponentProps<"button"> & {
-  variant: "primary" | "secondary";
+  variant: "primary" | "secondary"
 };
 
 function Button(props: ButtonProps) {
@@ -93,7 +93,7 @@ import React, { ComponentProps } from "react";
 
 //remove onChange property from input with Omit<Type, Keys> and combine with new type
 type InputProps = Omit<ComponentProps<"input">, "onChange"> & {
-  onChange: (value: string) => void;
+  onChange: (value: string) => void
 };
 
 function Input(props: InputProps) {
@@ -153,16 +153,19 @@ const [data, setData] = useState<Data | null>(null);
 
 ```tsx
 function App(props: { id: number }) {
-                                //⬇️ add type here
-  const handleClick = useCallback((message: string) => {
-    console.log("name")
-  }, [props.id]);
+  //⬇️ add type here
+  const handleClick = useCallback(
+    (message: string) => {
+      console.log("name");
+    },
+    [props.id]
+  );
 
   return (
     <div>
       <p>{message}</p>
-      <button onClick={()=> handleClick("hello")}>button 1</button>
-      <button onClick={()=> handleClick("hello")}>button 2</button>
+      <button onClick={() => handleClick("hello")}>button 1</button>
+      <button onClick={() => handleClick("hello")}>button 2</button>
     </div>
   );
 }
@@ -185,7 +188,6 @@ export const Component = () => {
 
   return <div></div>;
 };
-
 ```
 
 ### useRef with HTML element
@@ -197,7 +199,6 @@ export const Component = () => {
 
   return <div ref={ref} />;
 };
-
 ```
 
 ```tsx
@@ -207,7 +208,6 @@ export const Component = () => {
 
   return <input ref={ref} />;
 };
-
 ```
 
 ### useRef with forwardRef
@@ -215,28 +215,27 @@ export const Component = () => {
 ```tsx
 type InputProps = {
   className: string
-}
+};
 
 const Search = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  return <input ref={ref} className={props.className} />
-})
-// add displayName if you are using function expression, so its has a name in react devtool
-Search.displayName = 'Search'
+  return <input ref={ref} className={props.className} />;
+});
+// add displayName if you are using function expression, so its has a name in React Devtool
+Search.displayName = "Search";
 
 function App() {
-  const input = React.useRef<HTMLInputElement>(null)
+  const input = React.useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // focus to input element on first render
     if (input.current) {
-      input.current.focus()
+      input.current.focus();
     }
-  }, [])
+  }, []);
 
-  return <Search className='some-input' ref={input} />
+  return <Search className="some-input" ref={input} />;
 }
 ```
-
 
 ### Making a Read-Only Ref Mutable
 
@@ -244,7 +243,7 @@ function App() {
 export const Component = () => {
   const ref1 = useRef<string>(null);
   // if you pass null to initial value
-  // this not allowed to change directly 
+  // this not allowed to change directly
   ref1.current = "Hello";
 
   const ref2 = useRef<string>();
@@ -255,6 +254,68 @@ export const Component = () => {
 };
 ```
 
+## useReducer
+
+You can use [Discriminated Unions](https://www.totaltypescript.com/discriminated-unions-are-a-devs-best-friend) for reducer actions. Don't forget to define the return type of reducer, otherwise TypeScript will infer it.
+
+```tsx
+import { useReducer } from "react";
+
+const initialState = { count: 0 };
+
+type ACTIONTYPE =
+  | { type: "increment"; payload: number }
+  | { type: "decrement"; payload: string };
+
+function reducer(state: typeof initialState, action: ACTIONTYPE) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + action.payload };
+    case "decrement":
+      return { count: state.count - Number(action.payload) };
+    default:
+      throw new Error();
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  return (
+    <>
+      Count: {state.count}
+      <button onClick={() => dispatch({ type: "decrement", payload: "5" })}>
+        -
+      </button>
+      <button onClick={() => dispatch({ type: "increment", payload: 5 })}>
+        +
+      </button>
+    </>
+  );
+}
+```
+
+## Context
+
+```tsx
+import { createContext, useState } from "react";
+
+type ThemeContextType = "light" | "dark";
+
+const ThemeContext = createContext<ThemeContextType>("light");
+
+// If you don't have any meaningful default value, specify null:
+const _ThemeContext = createContext<ThemeContextType | null>(null);
+
+const App = () => {
+  const [theme, setTheme] = useState<ThemeContextType>("light");
+
+  return (
+    <ThemeContext.Provider value={theme}>
+      <MyComponent />
+    </ThemeContext.Provider>
+  );
+};
+```
 
 ## Types or Interfaces?
 
