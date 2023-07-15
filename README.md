@@ -103,7 +103,7 @@ function Input(props: InputProps) {
 
 ### 4. Extracting Props from Custom Components
 
-useful when author of some external library dont export the type definition
+Useful when author of some external library dont export the type definition
 
 ```tsx
 import { ComponentProps } from "react";
@@ -114,7 +114,7 @@ type NavBarProps = ComponentProps<typeof NavBar>;
 
 ## Typing Event Handlers from native element
 
-hover native html props, you can copy paste the type definition
+Hover native html props in VSCode, you can copy paste the type definition
 
 ```tsx
 type ButtonProps = {
@@ -130,7 +130,7 @@ type ButtonProps = {
 ```tsx
 // ❌ Typescript already know `text` type is string
 const [text, setText] = useState<string>("");
-// ✅ no need to tell typescript
+// ✅ no need to tell typescript, only work with primitive value
 const [text, setText] = useState("");
 ```
 
@@ -198,18 +198,10 @@ export const Component = () => {
 ```tsx
 export const Component = () => {
   // add null to initial value
+  // HTMLdivElement, HTMLinputElement etc.
   const ref = useRef<HTMLDivElement>(null);
 
   return <div ref={ref} />;
-};
-```
-
-```tsx
-export const Component = () => {
-  // add null to initial value
-  const ref = useRef<HTMLInputElement>(null);
-
-  return <input ref={ref} />;
 };
 ```
 
@@ -220,11 +212,11 @@ type InputProps = {
   className: string;
 };
 
-const Search = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+const MyInput = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return <input ref={ref} className={props.className} />;
 });
 // add displayName if you are using function expression, so its has a name in React Devtool
-Search.displayName = "Search";
+MyInput.displayName = "MyInput";
 
 function App() {
   const input = React.useRef<HTMLInputElement>(null);
@@ -236,7 +228,7 @@ function App() {
     }
   }, []);
 
-  return <Search className="some-input" ref={input} />;
+  return <MyInput className="input-style" ref={input} />;
 }
 ```
 
@@ -304,10 +296,21 @@ import { createContext, useState } from "react";
 
 type ThemeContextType = "light" | "dark";
 
-const ThemeContext = createContext<ThemeContextType>("light");
+const ThemeContext = createContext<ThemeContextType | null>(null);
 
-// If you don't have any meaningful default value, specify null:
-const _ThemeContext = createContext<ThemeContextType | null>(null);
+//if you have proper default value, you dont need specify null
+//const ThemeContext = createContext<ThemeContextType>("light");
+
+const useTheme = () => {
+  const theme = useContext(ThemeContext);
+
+  if (!theme) {
+    throw new Error(
+      "useTheme has to be used within <ThemeContext.Provider>"
+    );
+  }
+  return theme;
+};
 
 const App = () => {
   const [theme, setTheme] = useState<ThemeContextType>("light");
@@ -318,11 +321,18 @@ const App = () => {
     </ThemeContext.Provider>
   );
 };
+
+
+const SomeComponent = () => {
+   // since the value has been checked inside useTheme, no need checking null value
+   const theme = useTheme();
+   return <p>current theme: {theme}.</p>;
+};
 ```
 
 ## Polymorphic
 
-Imagine a `Button` component that renders a `<button>` element, but with your fancy button styles. If want to render the Button component as an a element we might have an API like:
+Imagine a `Button` component that renders a `<button>` element, but with your fancy button styles. If want to render the Button component as an a other element we might have an API like:
 
 ```tsx
 <Button variantColor="primary" href="https://blog.makerx.com.au/" as="a">
@@ -330,7 +340,7 @@ Imagine a `Button` component that renders a `<button>` element, but with your fa
 </Button>
 ```
 
-This looks nice, but its not work well with typescript. here the alternative using `radix-ui/react-slot`
+This looks nice, but its not work realy well with typescript. here the alternative using `radix-ui/react-slot`
 
 ```tsx
 
