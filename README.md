@@ -195,14 +195,40 @@ export const Component = () => {
 
 ### useRef with HTML element
 
-```tsx
-export const Component = () => {
-  // add null to initial value
-  // HTMLdivElement, HTMLinputElement etc.
-  const ref = useRef<HTMLDivElement>(null);
+you can hover over the type of ref in the element to check what it accepts in your editor
 
-  return <div ref={ref} />;
+```tsx
+export const Component1 = () => {
+  // add null to initial value
+  const ref = useRef<HTMLAudioElement>(null);
+
+  //(property) React.ClassAttributes<HTMLAudioElement>.ref?: React.LegacyRef<HTMLAudioElement> | undefined
+  return <audio ref={ref} />;
 };
+
+```
+
+alternative using `ElementRef` type helper
+
+```tsx
+import { useRef, ElementRef } from "react";
+import { OtherComponent } from "./other-component";
+
+// the easy alternative, you can use ElementRef
+const Component1 = () => {
+  const audioRef = useRef<ElementRef<"audio">>(null);
+  return <audio ref={audioRef}>Hello</audio>;
+}
+
+// you can use ElementRef for component too
+type OtherComponentRef = ElementRef<typeof OtherComponent>;
+
+const Component2 = () => {
+  const ref = useRef<OtherComponentRef>(null);
+ 
+ return <OtherComponent ref={ref}>Hello</OtherComponent>;
+};
+
 ```
 
 ### useRef with forwardRef
