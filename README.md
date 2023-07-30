@@ -1,5 +1,30 @@
 # Super Simple React Typescript Cheatsheet
 
+- [Super Simple React Typescript Cheatsheet](#super-simple-react-typescript-cheatsheet)
+  - [Typing props with inline type](#typing-props-with-inline-type)
+  - [Typing props with Type](#typing-props-with-type)
+  - [Typing props with default value](#typing-props-with-default-value)
+  - [Typing props with children](#typing-props-with-children)
+  - [Using Native HTML props to React Components](#using-native-html-props-to-react-components)
+    - [1. Basic](#1-basic)
+    - [2. Combine with your type](#2-combine-with-your-type)
+    - [3. Overriding Native Props](#3-overriding-native-props)
+    - [4. Extracting Props from Custom Components](#4-extracting-props-from-custom-components)
+  - [Typing Event Handlers from native element](#typing-event-handlers-from-native-element)
+  - [useState](#usestate)
+  - [useCallback](#usecallback)
+  - [useRef](#useref)
+    - [Basic useRef](#basic-useref)
+    - [useRef with HTML element](#useref-with-html-element)
+    - [useRef with forwardRef](#useref-with-forwardref)
+    - [Making a Read-Only Ref Mutable](#making-a-read-only-ref-mutable)
+  - [useReducer](#usereducer)
+  - [Context](#context)
+  - [Polymorphic](#polymorphic)
+  - [Types or Interfaces?](#types-or-interfaces)
+  - [Resources](#resources)
+
+
 ## Typing props with inline type
 
 ```tsx
