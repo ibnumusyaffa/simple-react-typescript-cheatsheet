@@ -1,6 +1,6 @@
-# Super Simple React Typescript Cheatsheet
+# Simple React Typescript Cheatsheet
 
-- [Super Simple React Typescript Cheatsheet](#super-simple-react-typescript-cheatsheet)
+- [Simple React Typescript Cheatsheet](#simple-react-typescript-cheatsheet)
   - [Typing props with inline type](#typing-props-with-inline-type)
   - [Typing props with Type](#typing-props-with-type)
   - [Typing props with default value](#typing-props-with-default-value)
